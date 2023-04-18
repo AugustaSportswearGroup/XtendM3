@@ -2,7 +2,7 @@
  * README
  * This extension is being used to  get the features and option values from M3
  *
- * Name: EXT010MI.GetFeatureOptn
+ * Name: EXT002MI.GetFeatureOptn
  * Description: Get the features and option values from M3
  * Date	      Changed By                      Description
  *20230322  SuriyaN@fortude.co              Get the features and option values from M3
@@ -231,6 +231,11 @@ public class GetFeatureOptn extends ExtendM3Transaction {
       OPTN = container.get("PNOPTN")
   }
 
+  /**
+   *Get features and operation with selection type 3 if record not found anywhere else. 
+   * @params
+   * @return
+   */
   public void getFeatureOptnWithSelectionType() {
     ExpressionFactory expression = database.getExpressionFactory("MPDOMA")
     expression = expression.eq("PNFTID", QAMCC2).and(expression.eq("PNOPTN", QBMVC2))
@@ -249,7 +254,12 @@ public class GetFeatureOptn extends ExtendM3Transaction {
       FTID = container.get("PNFTID")
       OPTN = container.get("PNOPTN")
   }
-
+  
+  /**
+   *Get features and operation with item number if record not found anywhere else. 
+   * @params
+   * @return
+   */
   public void getFeatureOptnWithItemNumber() {
     if (FTID == null && OPTN == null) {
       
@@ -257,7 +267,6 @@ public class GetFeatureOptn extends ExtendM3Transaction {
       iITNO = "0P9HB"
       getMaterialAndOperationDetails()
       getMatrixIdentityDetails(SIDI)
-      
       ExpressionFactory expression = database.getExpressionFactory("MPDMAT")
       expression = expression.like("PMMTNO", iITNO+"%")
       DBAction query = database.table("MPDMAT").matching(expression).selection("PMMTNO").index("00").build()
@@ -266,8 +275,8 @@ public class GetFeatureOptn extends ExtendM3Transaction {
       container.set("PMFACI", iFACI)
       container.set("PMPRNO", iPRNO)
       container.set("PMSTRT", iSTRT)
-      container.set("PMSIDI", SIDI)
-      query.readAll(container, 4, resultset_operationDetails_withItemNumber)
+      int pageSize = mi.getMaxRecords() <= 0 ? 10000 : mi.getMaxRecords();
+      query.readAll(container, 4,pageSize, resultset_operationDetails_withItemNumber)
     }
   }
 
