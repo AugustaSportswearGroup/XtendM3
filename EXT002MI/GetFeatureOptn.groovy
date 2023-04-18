@@ -124,7 +124,8 @@ public class GetFeatureOptn extends ExtendM3Transaction {
     container.set("PMFACI", iFACI)
     container.set("PMPRNO", iPRNO)
     container.set("PMSTRT", iSTRT)
-    query.readAll(container, 4, resultset)
+    int pageSize = mi.getMaxRecords() <= 0 ? 10000 : mi.getMaxRecords();
+    query.readAll(container, 4,pageSize, resultset)
 
   }
 
@@ -185,7 +186,8 @@ public class GetFeatureOptn extends ExtendM3Transaction {
     DBContainer container = query.getContainer()
     container.set("QBCONO", iCONO)
     container.set("QBMXID", SIDI)
-    query.readAll(container, 2, resultset_matrixDetails)
+    int pageSize = mi.getMaxRecords() <= 0 ? 10000 : mi.getMaxRecords();
+    query.readAll(container, 2,pageSize, resultset_matrixDetails)
 
   }
 
@@ -222,7 +224,8 @@ public class GetFeatureOptn extends ExtendM3Transaction {
     container.set("PNPRNO", iPRNO)
     container.set("PNSTRT", iSTRT)
     container.set("PNMSEQ", sequenceSelectID.get(SIDI) as Integer)
-    query.readAll(container, 5, resultset_operationDetails)
+    int pageSize = mi.getMaxRecords() <= 0 ? 10000 : mi.getMaxRecords();
+    query.readAll(container, 5,pageSize, resultset_operationDetails)
   }
 
   Closure < ? > resultset_operationDetails = {
@@ -246,7 +249,8 @@ public class GetFeatureOptn extends ExtendM3Transaction {
     container.set("PNPRNO", iPRNO)
     container.set("PNSTRT", iSTRT)
     container.set("PNOTYP", "3")
-    query.readAll(container, 5, resultset_operationDetails_withSelectionType)
+    int pageSize = mi.getMaxRecords() <= 0 ? 10000 : mi.getMaxRecords();
+    query.readAll(container, 5,pageSize, resultset_operationDetails_withSelectionType)
   }
 
   Closure < ? > resultset_operationDetails_withSelectionType = {
@@ -254,7 +258,7 @@ public class GetFeatureOptn extends ExtendM3Transaction {
       FTID = container.get("PNFTID")
       OPTN = container.get("PNOPTN")
   }
-  
+
   /**
    *Get features and operation with item number if record not found anywhere else. 
    * @params
@@ -262,7 +266,7 @@ public class GetFeatureOptn extends ExtendM3Transaction {
    */
   public void getFeatureOptnWithItemNumber() {
     if (FTID == null && OPTN == null) {
-      
+
       isFeatureAndOptionFound = false
       iITNO = "0P9HB"
       getMaterialAndOperationDetails()
@@ -316,3 +320,4 @@ public class GetFeatureOptn extends ExtendM3Transaction {
     mi.write()
   }
 }
+
